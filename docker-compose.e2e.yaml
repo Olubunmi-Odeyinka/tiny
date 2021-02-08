@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    env_file: 
+      - ./env/postgres.env
+  backend:
+    build: ./tiny-api
+    command: >
+      sh -c "MIX_ENV=test mix ecto.create &&
+             mix test"
+    # ports:
+    #   - '4000:4000'
+    volumes:
+      - ./tiny-api:/app
+    env_file:
+      - ./env/postgres.env
+    depends_on:
+      - db
+  # frontend:
+  #   build: ./tiny-web
+  #   ports:
+  #     - '3000:3000'
+  #   volumes:
+  #     - ./tiny-web/src:/app/src
+  #     - '/app/node_modules'
+  #   stdin_open: true
+  #   tty: true
+  #   depends_on:
+  #     - backend
+
+
+
+
+
+  # docker-compose -f docker-compose.e2e.yaml up --exit-code-from backend
+  # docker-compose -f docker-compose.yml -f docker-compose.e2e.yml up

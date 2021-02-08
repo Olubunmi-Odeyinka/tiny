@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    env_file: 
+      - ./env/postgres.env
+  backend:
+    build: ./tiny-api
+    command: >
+      sh -c "mix ecto.create &&
+             mix phx.server"
+    ports:
+      - '4000:4000'
+    volumes:
+      - ./tiny-api:/app
+    env_file:
+      - ./env/postgres.env
+    depends_on:
+      - db
+  frontend:
+    build: ./tiny-web
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./tiny-web/src:/app/src
+      - '/app/node_modules'
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
