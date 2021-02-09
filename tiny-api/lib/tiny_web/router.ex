@@ -9,6 +9,18 @@ defmodule TinyWeb.Router do
     pipe_through :api
   end
 
+    # Other scopes may use custom stacks.
+  scope "/api" do
+    pipe_through :api
+
+    forward("/graphiql", Absinthe.Plug.GraphiQL,
+      schema: TinyWeb.Schema.Schema,
+      socket: TinyWeb.UserSocket
+    )
+
+    forward("/", Absinthe.Plug, schema: TinyWeb.Schema.Schema)
+  end
+
   # Enables LiveDashboard only for development
   #
   # If you want to use the LiveDashboard in production, you should put
@@ -25,3 +37,5 @@ defmodule TinyWeb.Router do
     end
   end
 end
+
+# TinyWeb.Schema.Schema

@@ -8,7 +8,7 @@ services:
   backend:
     build: ./tiny-api
     command: >
-      sh -c "MIX_ENV=test mix ecto.create &&
+      sh -c "MIX_ENV=test mix ecto.setup &&
              mix test"
     # ports:
     #   - '4000:4000'
