@@ -49,7 +49,18 @@ assert json_response(conn, 200) == %{ "data" => %{
 
 end
 
-test "retrieve an hash " do
+test "ensuring creating same link several time return same result" do
+  long_url = "https://stackoverflow.com/jobs/494606/mid-level-back-end-net-core-postgresql-engineer-findox-inc/similar?id=494606"
+
+  conn1 = post build_conn(), "/api", query: @create_url_hash, variables: %{"longUrl" => long_url}
+
+  conn2 = post build_conn(), "/api", query: @create_url_hash, variables: %{"longUrl" => long_url}
+
+  assert json_response(conn1, 200)  == assert json_response(conn2, 200)
+
+end
+
+test "retrieve a link based on the hash " do
   long_url = "https://stackoverflow.com/questions/61583375/how-can-i-use-count-and-group-by-in-prisma-2"
   # expected equivaent hash
   hash = "1335675931"
@@ -70,19 +81,3 @@ end
 
 
 end
-
-# field :create_link, :link do
-#   arg(:id, :id)
-#   arg(:long_url, :string)
-#   resolve(&Resolvers.Url.links.create_link/3)
-# end
-
-# {
-#   "data": {
-#     "createLink": {
-#       "hash": "3867677578",
-#       "id": "4",
-#       "longUrl": "www.yahooo.com"
-#     }
-#   }
-# }
