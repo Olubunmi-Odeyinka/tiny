@@ -48,5 +48,12 @@ defmodule TinyWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
+
+  plug Corsica,
+    origins: ["http://localhost:3000", "http://localhost:4000"],
+    allow_credentials: true,
+    allow_headers: ["Content-Type", "Authorization"],
+    log: [rejected: :error, invalid: :warn, accepted: :debug]
+
   plug TinyWeb.Router
 end
