@@ -1,0 +1,18 @@
+#========Building and Running===============================
+# Run the from the tiny directory
+# This bring elixir into your system and try to get the deps for tiny-api
+1. docker-compose run elixir deps.get deps.compile compile
+# This build the backend image
+2. docker-compose build backend
+# This build the frontend image
+3docker-compose build frontend
+# Run "docker-compose up" twice for the first time you run it
+# subsequently can be run once
+4. docker-compose up 
+# DB, backend and frontend should be up and you can access the graph api and frontend at
+# http://localhost:4000/api/graphiql and http://localhost:3000/ respectively
+
+#======== Testing (Note: pls Build first) ===============================
+# To Run all test you can run command below (Note: you must be successful with above steps to run test)
+# Like "docker-compose up" you should run it twice the first time because it will be doing lots of stuff the first time
+5. docker-compose -f docker-compose.test.yaml up
