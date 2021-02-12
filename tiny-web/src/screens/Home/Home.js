@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useLocation } from 'react-router-dom';
-import { gql, useMutation, useQuery, useLazyQuery, useApolloClient} from '@apollo/client';
+import {navigateUrl} from '../../helper/urlFunctions';
+import { gql, useMutation } from '@apollo/client';
 
 const CREATE_LINK_MUTATION = gql`
   mutation CreateLink(
@@ -16,14 +16,8 @@ const CREATE_LINK_MUTATION = gql`
 const Home = (props) => {
 
   const [longUrl, setLongUrl] = useState('');
- // const location = useLocation();
 
-  
-
-
-  const [createLink, {data}] = useMutation(CREATE_LINK_MUTATION);
-
-
+  const [createLink, {data,  loading, error }] = useMutation(CREATE_LINK_MUTATION);
 
   const inputChangeHandler = (e) => {
     setLongUrl(e.target.value);
@@ -31,14 +25,6 @@ const Home = (props) => {
 
   const onSubmitHandler = () => {
     createLink({ variables: { longUrl: longUrl } });
-  }
-
-  const ensureUrlHasProtocol = (url) => {
-    let validUrl = url
-    if(!(url.startsWith('http://') || url.startsWith('https://'))){
-      validUrl = 'http://' + url;
-    }
-    return validUrl;
   }
 
   const createUrlFromHash = (hash) => {
@@ -55,38 +41,27 @@ const Home = (props) => {
 
   }
 
-  const navigateUrl = (url) => {
-    console.log(url)
-    let element = document.createElement('a');
-    element.href =  ensureUrlHasProtocol(url);
-   
-
-    element.click();
-  }
-
   return (
     <div className="m-4 jumbotron">
       <h1 className="display-4">Shorten you url!</h1>
       <p className="lead">Past in the textbox below and click the left button.</p>
       <hr className="my-4"/>
         <form >
-          <label htmlFor="basic-url">Your URL</label>
+          <label htmlFor="longUrl">Your URL</label>
           <div className="input-group mb-3">
-            <input id="longUrl" onChange={inputChangeHandler} value={longUrl} type="text" className="form-control" placeholder="Long Url Here" aria-label="Recipient's username" aria-describedby="basic-addon2" />
+            <input id="longUrl" data-testid="long-url" onChange={inputChangeHandler} value={longUrl} type="text" className="form-control" placeholder="Long Url Here" aria-label="Recipient's username" aria-describedby="basic-addon2" />
             <div className="input-group-append">
-              <button onClick={onSubmitHandler} className="btn btn-outline-secondary" type="button">Press here to Shorten</button>
+              <button disabled={!longUrl}  onClick={onSubmitHandler} className="btn btn-outline-secondary" type="button">Press here to Shorten</button>
             </div>
           </div>
         </form>
         <hr className="my-4"/>
 
-        {data && data.createLink ? <div className="alert alert-dark d-flex" role="alert">
+        {data && data.createLink ? <div className="link-item alert alert-dark d-flex" role="alert">
         <span className="mr-auto p-2">{ createUrlFromHash(data.createLink.hash) } </span>
         <button type="button" onClick={() => navigateUrl(data.createLink.longUrl)} className="btn btn-success ml-4 p-2">Test Link</button>
         <button type="button" onClick={() => copyToClipClipBoard(data.createLink.hash)} className="btn btn-dark ml-4 p-2">Copy Link</button>
-      </div>
-          
-        : null }
+      </div> : null }
         
     </div>
   );

@@ -37,7 +37,7 @@ defmodule Tiny.Urls do
   """
   def get_link!(id), do: Repo.get!(Link, id)
 
-  def get_by_hash!(hash), do: Repo.get_by!(Link, hash: hash)
+  def get_by_hash(hash), do: Repo.get_by(Link, hash: hash)
 
   @doc """
   Creates a link.

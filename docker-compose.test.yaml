@@ -18,17 +18,19 @@ services:
       - ./env/postgres.env
     depends_on:
       - db
-  # frontend:
-  #   build: ./tiny-web
-  #   ports:
-  #     - '3000:3000'
-  #   volumes:
-  #     - ./tiny-web/src:/app/src
-  #     - '/app/node_modules'
-  #   stdin_open: true
-  #   tty: true
-  #   depends_on:
-  #     - backend
+  frontend:
+    build: ./tiny-web
+    command: >
+      sh -c "npm test"
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./tiny-web/src:/app/src
+      - '/app/node_modules'
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
 
 
 

@@ -3,7 +3,13 @@ defmodule TinyWeb.Resolvers.Url.Link do
   alias TinyWeb.Schema.ChangesetErrors
 
   def link(_, %{hash: hash}, _) do
-    {:ok, Urls.get_by_hash!(hash)}
+    case Urls.get_by_hash(hash) do
+
+      nil -> {:error, message: "Could not find any related link", details: nil}
+
+      link ->  {:ok, link}
+
+    end
   end
 
   def create_link(_, args, _) do
