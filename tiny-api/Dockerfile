@@ -3,16 +3,20 @@ FROM elixir:latest
 # When this image is run, make /app the current working directory
 WORKDIR /app
 
-COPY . .
-
 # Install hex
 RUN mix local.hex --force
 
 #Install Redar
 RUN mix local.rebar --force
 
-# Compile the project
-RUN mix do compile
+COPY mix.exs ./
+COPY mix.lock ./
+COPY ./deps ./deps
+
+RUN mix deps.compile
+RUN mix compile
+
+COPY . .
 
 EXPOSE 4000
 

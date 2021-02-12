@@ -1,5 +1,12 @@
 version: '3.8'
 services:
+  elixir:
+    build: ./
+    stdin_open: true
+    tty: true
+    volumes:
+       - ./tiny-api/:/app
+    
   db:
     image: postgres:latest
     restart: always
@@ -18,6 +25,7 @@ services:
       - ./env/postgres.env
     depends_on:
       - db
+
   frontend:
     build: ./tiny-web
     ports:
